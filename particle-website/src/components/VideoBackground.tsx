@@ -34,8 +34,8 @@ export function VideoBackground({ src, poster, className = '', style }: VideoBac
     }
 
     return () => {
-    // Cleanup is handled by hls.js automatically
-  };
+      // Cleanup is handled by hls.js automatically
+    };
   }, [src]);
 
   return (
