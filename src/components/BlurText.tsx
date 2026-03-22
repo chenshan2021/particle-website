@@ -1,39 +1,52 @@
-import React from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 
 interface BlurTextProps {
-  text: string;
-  className?: string;
-  delay?: number;
+  text: string
+  className?: string
+  delay?: number
+  duration?: number
 }
 
-export function BlurText({ text, className = '', delay = 100 }: BlurTextProps) {
-  const words = text.split(' ');
-  const ref = React.useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
+export const BlurText: React.FC<BlurTextProps> = ({
+  text,
+  className = '',
+  delay = 0,
+  duration = 0.5,
+}) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
+  const words = text.split(' ')
 
   return (
-    <div ref={ref} className={`inline-block ${className}`}>
-      {words.map((word, index) => (
+    <div ref={ref} className={className}>
+      {words.map((word, i) => (
         <motion.span
-          key={index}
-          initial={{
-            filter: 'blur(10px)',
-            opacity: 0,
-            y: 50,
-          }}
-          animate={
-            isInView
-              ? {
-                  filter: 'blur(0px)',
-                  opacity: 1,
-                  y: 0,
-                }
-              : undefined
-          }
+          key={i}
+          initial={{ filter: 'blur(10px)', opacity: 0 }}
+          animate={isVisible ? { filter: 'blur(0px)', opacity: 1 } : {}}
           transition={{
-            duration: 0.35,
-            delay: index * (delay / 1000),
+            duration,
+            delay: delay + i * 0.05,
+            ease: 'easeOut',
           }}
           className="inline-block mr-2"
         >
@@ -41,5 +54,5 @@ export function BlurText({ text, className = '', delay = 100 }: BlurTextProps) {
         </motion.span>
       ))}
     </div>
-  );
+  )
 }

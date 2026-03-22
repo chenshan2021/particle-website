@@ -1,3 +1,6 @@
+import tailwindcssAnimate from 'tailwindcss-animate'
+
+/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
   content: [
@@ -11,16 +14,19 @@ export default {
         body: ['"Barlow"', 'sans-serif'],
       },
       colors: {
-        background: 'rgb(213 45% 67%)',
-        foreground: 'rgb(0 0% 100%)',
-        primary: 'rgb(0 0% 100%)',
-        'primary-foreground': 'rgb(213 45% 67%)',
-        border: 'rgb(0 0% 100% / 0.2)',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: 'hsl(var(--primary))',
+        'primary-foreground': 'hsl(var(--primary-foreground))',
+        border: 'hsl(var(--border))',
       },
       borderRadius: {
         '4xl': '9999px',
       },
+      screens: {
+        '3xl': '1920px',
+      },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [tailwindcssAnimate],
 }
